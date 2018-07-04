@@ -1,0 +1,19 @@
+Hi, we are trying to keep awake and understand the video about Naive Bayes
+
+Target concept Interesting?: Document -> {+,-}
+
+1 - Represents each document by a vector of words
+2 - Learning: Use training examples to stimate
+
+Simple math:
+	p(+) : Documents hated as positives
+	p(-) : Documents hated as negative
+	Wk   : Specific word 
+	nk   : Number of times that the word appear
+	n    : Total of words (includes repetions) in all docs
+    |vocabulary| : Number of words in the vocabulary
+
+p(+) = total of documentes hated as positive / total of documents
+
+p(Wk|+) = (nk + 1)/(n + |vocabulary|)
+		
