@@ -6,8 +6,19 @@ import pandas as pd
 
 data = pd.read_table('/home/manorlf/git/RI/finalproject/data/ml-100k/u.data')
 data.columns = ['user', 'movie', 'rating', 'time']
+movies_data = open('/home/manorlf/git/RI/finalproject/data/ml-100k/u.item', encoding='ISO-8859-1')
+
+def map_movie_id_name(movies_data):
+    dict_movies = dict()
+    for line in movies_data:
+        item = line.split('|')
+        movie_id = item[0]
+        movie_name = item[1]
+        dict_movies[movie_id] = movie_name
+    return dict_movies
 
 
+dict_movies = map_movie_id_name(movies_data)
 
 def get_all_movies(data):
     all_movies = set()
@@ -42,7 +53,8 @@ def get_unwatched(user, dict_unwatched):
 def predict_to_user(user, unwatcheds, algo):
     movies_rating = []
     for movie in unwatcheds:
-        movies_rating.append(((algo.predict(uid=user, iid=str(movie)).est), movie))
+        pred_rating = algo.predict(uid=str(user), iid=str(movie)).est
+        movies_rating.append((pred_rating, movie))
     return movies_rating
 
 
@@ -50,7 +62,7 @@ def top5_recomendation(user, algo, dict_unwatched):
     unwatcheds = dict_unwatched[user]
     result = predict_to_user(user, unwatcheds, algo)
     result.sort()
-    return result
+    return result[-5:]
 
 dict_user_movies = map_user_movies(data)
 all_movies = get_all_movies(data)
@@ -68,7 +80,15 @@ algo.fit(trainset)
 
 
 print(algo.predict(uid='245', iid='2'))
-print(top5_recomendation(245, algo, dict_unwatched))
+top5 = top5_recomendation(245, algo, dict_unwatched)
+
+print('Movies watched:')
+for i in dict_user_movies[245]:
+    print(dict_movies[str(i)])
+
+print('Top reconmendation:')
+for i in top5:
+    print(dict_movies[str(i[1])])
 
 
 
